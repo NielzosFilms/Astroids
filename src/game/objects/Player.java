@@ -2,6 +2,7 @@ package game.objects;
 
 import game.enums.ID;
 import game.handlers.GameObject;
+import game.system.Game;
 import game.system.Helpers;
 
 import java.awt.*;
@@ -33,16 +34,35 @@ public class Player extends GameObject {
 
 		x += velX;
 		y += velY;
+
+		/*if(game.keyInput.isKeyDown(KeyEvent.VK_W)) {
+			velY = -move_speed;
+		}
+		if(game.keyInput.isKeyDown(KeyEvent.VK_S)) {
+			velY = move_speed;
+		}
+		if(game.keyInput.isKeyDown(KeyEvent.VK_A)) {
+			velX = -move_speed;
+		}
+		if(game.keyInput.isKeyDown(KeyEvent.VK_D)) {
+			velX = move_speed;
+		}
+		if(!game.keyInput.isKeyDown(KeyEvent.VK_W) && !game.keyInput.isKeyDown(KeyEvent.VK_S)) {
+			velY = 0;
+		}
+		if(!game.keyInput.isKeyDown(KeyEvent.VK_A) && !game.keyInput.isKeyDown(KeyEvent.VK_D)) {
+			velX = 0;
+		}*/
 	}
 
 	@Override
 	public void render(Graphics g) {
 		g.setColor(Color.green);
-		g.fillRect(x-16, y-16, 32, 32);
+		g.fillRect(x-Game.TILESIZE/2, y-Game.TILESIZE/2, Game.TILESIZE, Game.TILESIZE);
 	}
 
 	@Override
 	public Rectangle getBounds() {
-		return null;
+		return new Rectangle(x-Game.TILESIZE/2, y-Game.TILESIZE/2, Game.TILESIZE, Game.TILESIZE);
 	}
 }

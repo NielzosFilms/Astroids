@@ -12,10 +12,12 @@ import java.awt.image.BufferStrategy;
 public class Game extends Canvas implements Runnable {
 	public static final int SCREEN_WIDTH = 1200, SCREEN_HEIGHT = 800;
 	public static final String TITLE = "Astroids | NielzosFilms";
+	public static final int TILESIZE = 32;
 
 	private Thread thread;
 	private boolean running = true;
 	public static int current_fps = 0;
+	public static int current_ticks = 0;
 
 	public KeyInput keyInput = new KeyInput(this);
 	public MouseInput mouseInput = new MouseInput(this);
@@ -54,22 +56,39 @@ public class Game extends Canvas implements Runnable {
 		double delta = 0;
 		long timer = System.currentTimeMillis();
 		int frames = 0;
+
+		long fps_lastTime = System.nanoTime();
+		double fps_cap = 200.0;
+		double fps_ns = 1000000000 / fps_cap;
+		double fps_delta = 0;
+		int ticks = 0;
+
 		while (running) {
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			while (delta >= 1) {
 				tick();
+				ticks++;
 				delta--;
 			}
-			if (running)
-				render();
-			frames++;
+
+			long fps_now = System.nanoTime();
+			fps_delta += (fps_now - fps_lastTime) / fps_ns;
+			fps_lastTime = fps_now;
+			if(fps_delta >= 1) {
+				if (running)
+					render();
+				frames++;
+				fps_delta = 0;
+			}
 
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
 				current_fps = frames;
+				current_ticks = ticks;
 				frames = 0;
+				ticks = 0;
 			}
 		}
 		stop();
@@ -94,9 +113,14 @@ public class Game extends Canvas implements Runnable {
 
 		handler.render(g);
 
+		g.setColor(Color.white);
+		g.setFont(new Font("Arial", Font.BOLD, 10));
+		g.drawString("fps:" + current_fps, 10, 10);
+		g.drawString("ticks:" + current_ticks, 10, 20);
+
+		bs.show();
 		g.dispose();
 		g2d.dispose();
-		bs.show();
 	}
 
 	public static void main(String[] args) {
