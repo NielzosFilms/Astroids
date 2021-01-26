@@ -1,5 +1,5 @@
 package game.enums;
 
 public enum ID {
-	player,
+	player, player_bullet, astroid,
 }

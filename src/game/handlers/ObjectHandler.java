@@ -20,11 +20,30 @@ public class ObjectHandler {
 		for(int i=0; i<objects.size(); i++) {
 			objects.get(i).tick();
 		}
+		screenWrapObjects();
 	}
 
 	public void render(Graphics g) {
 		for(int i=0; i<objects.size(); i++) {
 			objects.get(i).render(g);
+		}
+	}
+
+	private void screenWrapObjects() {
+		LinkedList<GameObject> screenwrappable_objects = getObjectsByID(ID.player, ID.astroid);
+		for(GameObject object : screenwrappable_objects) {
+			if(object.getX() < -Game.TILESIZE) {
+				object.setX(Game.SCREEN_WIDTH);
+			}
+			if(object.getX() > Game.SCREEN_WIDTH+Game.TILESIZE) {
+				object.setX(0);
+			}
+			if(object.getY() < -Game.TILESIZE) {
+				object.setY(Game.SCREEN_HEIGHT);
+			}
+			if(object.getY() > Game.SCREEN_HEIGHT+Game.TILESIZE) {
+				object.setY(0);
+			}
 		}
 	}
 
